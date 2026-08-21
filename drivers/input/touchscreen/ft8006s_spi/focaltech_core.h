@@ -183,7 +183,8 @@ struct fts_ts_data {
 #ifdef CONFIG_PM
     bool dev_pm_suspend;
 #endif
-    bool gesture_mode;      /* gesture enable or disable, default: disable */
+    bool gesture_mode;
+    u8 gesture_bmode;      /* gesture enable or disable, default: disable */
     /* multi-touch */
     struct ts_event *events;
     u8 *bus_tx_buf;

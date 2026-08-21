@@ -171,7 +171,17 @@ int fts_gesture_readdata(struct fts_ts_data *ts_data, u8 *data)
         return ret;
     }
 
-    memcpy(buf, data, FTS_GESTURE_DATA_LEN);
+    if (ts_data->gesture_bmode == GESTURE_BM_TOUCH) {
+        memcpy(buf, data, FTS_GESTURE_DATA_LEN);
+    } else {
+        buf[2] = FTS_REG_GESTURE_OUTPUT_ADDRESS;
+        ret = fts_read(&buf[2], 1, &buf[2], FTS_GESTURE_DATA_LEN - 2);
+        if (ret < 0) {
+            FTS_ERROR("read gesture data fail");
+            return ret;
+        }
+    }
+
     if (buf[0] != ENABLE) {
         FTS_DEBUG("gesture not enable in fw, don't process gesture");
         return 1;
@@ -200,17 +210,10 @@ int fts_gesture_suspend(struct fts_ts_data *ts_data)
 {
     int i = 0;
     u8 state = 0xFF;
-    int ret = 0;
 
     FTS_FUNC_ENTER();
     if (enable_irq_wake(ts_data->irq)) {
         FTS_DEBUG("enable_irq_wake(irq:%d) fail", ts_data->irq);
-    }
-
-    ret = fts_enter_gesture_fw();
-    if (ret < 0) {
-        FTS_ERROR("download gesture firmware fail");
-        return ret;
     }
 
     for (i = 0; i < 5; i++) {
@@ -295,6 +298,7 @@ int fts_gesture_init(struct fts_ts_data *ts_data)
     fts_create_gesture_sysfs(ts_data->dev);
 
     ts_data->gesture_mode = FTS_GESTURE_EN;
+    ts_data->gesture_bmode = GESTURE_BM_REG;
 
     FTS_FUNC_EXIT();
     return 0;

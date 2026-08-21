@@ -92,6 +92,8 @@
 #define FTS_REG_CHARGER_MODE_EN             0x8B
 #define FTS_REG_GESTURE_EN                  0xD0
 #define FTS_REG_GESTURE_OUTPUT_ADDRESS      0xD3
+#define GESTURE_BM_REG                      0
+#define GESTURE_BM_TOUCH                    1
 #define FTS_REG_MODULE_ID                   0xE3
 #define FTS_REG_LIC_VER                     0xE4
 #define FTS_REG_ESD_SATURATE                0xED
