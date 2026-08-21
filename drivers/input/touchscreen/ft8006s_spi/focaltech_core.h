@@ -295,6 +295,7 @@ void fts_prc_queue_work(struct fts_ts_data *ts_data);
 int fts_fwupg_init(struct fts_ts_data *ts_data);
 int fts_fwupg_exit(struct fts_ts_data *ts_data);
 int fts_fw_resume(void);
+int fts_enter_gesture_fw(void);
 int fts_fw_recovery(void);
 int fts_upgrade_bin(char *fw_name, bool force);
 int fts_enter_test_environment(bool test_state);

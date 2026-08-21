@@ -870,6 +870,41 @@ int fts_enter_test_environment(bool test_state)
     return 0;
 }
 
+int fts_enter_gesture_fw(void)
+{
+    int ret = 0;
+    struct fts_upgrade *upg = fwupgrade;
+
+    FTS_INFO("enter gesture fw function");
+    if (!upg || !upg->fw) {
+        FTS_ERROR("upg/fw is null");
+        return -EINVAL;
+    }
+
+    if (upg->ts_data->fw_loading) {
+        FTS_INFO("fw is loading, not download again");
+        return -EINVAL;
+    }
+
+    if (upg->fw_length <= upg->setting_nf->app2_offset) {
+        FTS_INFO("not support gesture-app, fwlen:%d app2_offset:%d",
+                 upg->fw_length, upg->setting_nf->app2_offset);
+        return 0;
+    }
+
+    FTS_INFO("gesture fw offset:%d, len:%d",
+             upg->setting_nf->app2_offset,
+             upg->fw_length - upg->setting_nf->app2_offset);
+
+    ret = fts_fw_download(upg->fw + upg->setting_nf->app2_offset,
+                          upg->fw_length - upg->setting_nf->app2_offset, true);
+    if (ret < 0) {
+        FTS_ERROR("gesture fw download failed");
+    }
+
+    return ret;
+}
+
 int fts_fw_resume(void)
 {
     int ret = 0;
