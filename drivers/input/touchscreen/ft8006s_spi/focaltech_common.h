@@ -144,6 +144,14 @@ struct ts_ic_info {
     printk("[FTS_TS]%s:"fmt"\n", __func__, ##args); \
 } while (0)
 
+#define FTS_INFO(fmt, args...) do { \
+    pr_info("[FTS_TS]"fmt"\n", ##args); \
+} while (0)
+
+#define FTS_ERROR(fmt, args...) do { \
+    pr_err("[FTS_TS]"fmt"\n", ##args); \
+} while (0)
+
 #define FTS_FUNC_ENTER() do { \
     printk("[FTS_TS]%s: Enter\n", __func__); \
 } while (0)
