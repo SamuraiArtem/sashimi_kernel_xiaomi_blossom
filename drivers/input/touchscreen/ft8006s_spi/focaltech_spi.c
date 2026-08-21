@@ -176,11 +176,11 @@ int fts_write(u8 *writebuf, u32 writelen)
 
     for (i = 0; i < SPI_RETRY_NUMBER; i++) {
         ret = fts_spi_transfer(txbuf, rxbuf, txlen);
+        FTS_DEBUG("wr addr:%02x status:%02x rx[4..7]:%02x%02x%02x%02x retry:%d ret:%d",
+                  writebuf[0], rxbuf[3], rxbuf[4], rxbuf[5], rxbuf[6], rxbuf[7], i, ret);
         if ((0 == ret) && ((rxbuf[3] & 0xA0) == 0)) {
             break;
         } else {
-            FTS_DEBUG("data write(status=%x),retry=%d,ret=%d",
-                      rxbuf[3], i, ret);
             ret = -EIO;
             udelay(CS_HIGH_DELAY);
         }
@@ -266,6 +266,10 @@ int fts_read(u8 *cmd, u32 cmdlen, u8 *data, u32 datalen)
         ret = fts_spi_transfer(txbuf, rxbuf, txlen);
         if ((0 == ret) && ((rxbuf[3] & 0xA0) == 0)) {
             memcpy(data, &rxbuf[dp], datalen);
+            FTS_DEBUG("rd addr:%02x status:%02x data:%02x%02x%02x%02x%02x%02x%02x%02x retry:%d",
+                      cmd[0], rxbuf[3],
+                      rxbuf[dp], rxbuf[dp+1], rxbuf[dp+2], rxbuf[dp+3],
+                      rxbuf[dp+4], rxbuf[dp+5], rxbuf[dp+6], rxbuf[dp+7], i);
             /* crc check */
             if (ctrl & DATA_CRC_EN) {
                 ret = rdata_check(&rxbuf[dp], txlen - dp);
