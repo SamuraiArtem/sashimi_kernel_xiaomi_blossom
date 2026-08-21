@@ -25,8 +25,7 @@ jobs:
         run: |
           make O=out ARCH=arm64 blossom_defconfig
           scripts/config --file out/.config \
-            -e FTRACE -e DYNAMIC_DEBUG -e KPROBES \
-            -e FUNCTION_TRACER -e ENABLE_DEFAULT_TRACERS
+            -e PSTORE -e PSTORE_RAM -e PSTORE_CONSOLE -e PSTORE_PMSG
           make O=out ARCH=arm64 olddefconfig
 
       - name: Build
