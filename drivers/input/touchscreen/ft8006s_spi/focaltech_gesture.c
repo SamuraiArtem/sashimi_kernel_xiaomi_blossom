@@ -200,10 +200,17 @@ int fts_gesture_suspend(struct fts_ts_data *ts_data)
 {
     int i = 0;
     u8 state = 0xFF;
+    int ret = 0;
 
     FTS_FUNC_ENTER();
     if (enable_irq_wake(ts_data->irq)) {
         FTS_DEBUG("enable_irq_wake(irq:%d) fail", ts_data->irq);
+    }
+
+    ret = fts_enter_gesture_fw();
+    if (ret < 0) {
+        FTS_ERROR("download gesture firmware fail");
+        return ret;
     }
 
     for (i = 0; i < 5; i++) {
